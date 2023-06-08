@@ -155,6 +155,9 @@ if __name__ == "__main__":
         file_name2 = args[4]
         iter_num = 300
         
+        fit(vectors_arr, initial_centroids, num_of_clusters, max_iter,
+            len(vectors_arr), vector_len, epsilon)
+        
         culc_vectors_arr(file_name1, file_name2)
         culc_initial_centroids()
         print([c[0] for c in initial_centroids])
@@ -164,6 +167,9 @@ if __name__ == "__main__":
         epsilon = float(args[3])
         file_name1 = args[4]
         file_name2 = args[5]
+        
+        fit(vectors_arr, initial_centroids, num_of_clusters, max_iter,
+            len(vectors_arr), vector_len, epsilon)
         
         culc_vectors_arr(file_name1, file_name2)
         culc_initial_centroids()
