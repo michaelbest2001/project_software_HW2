@@ -2,35 +2,51 @@
 #include <Python.h>
 #include "cap.h"
 
-/* Function to fit a Python list into a C array */
-static void fit_list_to_array(PyObject* input_list, double* array, Py_ssize_t list_size) {
+
+/* Function to fit a list of lists from Python into a continuous array in C */
+void fit_list_of_lists_to_array(PyObject* input_list, double* array, Py_ssize_t list_size, Py_ssize_t sublist_size) {
     for (Py_ssize_t i = 0; i < list_size; ++i) {
-        PyObject* item = PyList_GetItem(input_list, i);
-        array[i] = PyFloat_AsDouble(item);
+        PyObject* sublist = PyList_GetItem(input_list, i);
+
+        for (Py_ssize_t j = 0; j < sublist_size; ++j) {
+            PyObject* item = PyList_GetItem(sublist, j);
+            array[i * sublist_size + j] = PyFloat_AsDouble(item);
+        }
     }
 }
 
-/* Function to fit a C array into a Python list */
-static PyObject* fit_array_to_list(double* array, Py_ssize_t size) {
+/* Function to fit a C array into a Python list of lists */
+static PyObject* fit_array_to_list_of_lists(double* array, Py_ssize_t rows, Py_ssize_t cols) {
+    /* Create a new Python list object */
+    PyObject* list_of_lists = PyList_New(rows);
 
-    PyObject* list = PyList_New(size);
-
-    /* Check if creating the list was successful */
-    if (list == NULL) {
+    /* Check if creating the list of lists was successful */
+    if (list_of_lists == NULL){
         return NULL;
     }
-
-    /* Fit the array values into the Python list */
-    for (Py_ssize_t i = 0; i < size; ++i) {
-        PyObject* value = PyFloat_FromDouble(array[i]);
-        if (value == NULL) {
+    /* Fit the array values into the Python list of lists */
+    for (Py_ssize_t i = 0; i < rows; ++i) {
+        /* Create a new sublist for each row */
+        PyObject* sublist = PyList_New(cols);
+        if (sublist == NULL) {
             return NULL;
         }
-        PyList_SET_ITEM(list, i, value);
+
+        /* Fit the array values into the sublist */
+        for (Py_ssize_t j = 0; j < cols; ++j) {
+            PyObject* value = PyFloat_FromDouble(array[i * cols + j]);
+            if (value == NULL) {
+                return NULL;
+            }
+            PyList_SET_ITEM(sublist, j, value);
+        }
+        /* Set the sublist into the list of lists */
+        PyList_SET_ITEM(list_of_lists, i, sublist);
     }
 
-    return list;
+    return list_of_lists;
 }
+
 
 static PyObject* fit(PyObject *self, PyObject *args)
 {
@@ -45,21 +61,24 @@ static PyObject* fit(PyObject *self, PyObject *args)
     int vector_length_c;
 
     /* Parse the arguments from Python*/
-    if (!PyArg_ParseTuple(args, "OOii", &vectorsListPy, &centroisPy, &k_c, &max_iter_c, &num_vectors_c, &vector_length_c, &epsilon_c)){
+    if (!PyArg_ParseTuple(args, "OOii", &vectorsListPy, &centroidsPy, &k_c, &max_iter_c, &num_vectors_c, &vector_length_c, &epsilon_c)){
         return NULL;
     }
     /*fit the python list to c array*/
-    fit_list_to_array(vectorsListPy, vectorsList_c, k);
-    fit_list_to_array(centroidsPy, centroids_c, k);
+    fit_list_of_lists_to_array(vectorsListPy, vectorsList_c, num_vectors_c, vector_length_c);
+    fit_list_of_lists_to_array(centroidsPy, centroids_c, k_c, vector_length_c);
 
+    if (vectorsList_c == NULL || centroids_c == NULL){
+        return NULL;
+    }   
+   
     double* result_centroids_c  = kmeans_c(vectorsList_c, centroids_c, k_c, max_iter_c, num_vectors_c, vector_length_c, epsilon_c);
     if(result_centroids_c == NULL){
         return NULL;
     }
-    Py_ssize_t size = sizeof(array) / sizeof(array[0]);
-
+    Py_ssize_t size = k_c;
     /*fit the c array to python list*/
-    PyObject* resultCentroidsPy = fit_array_to_list(result_centroids_c, size);
+    PyObject* resultCentroidsPy = fit_array_to_list_of_lists(result_centroids_c, size, vector_length_c);
     return resultCentroidsPy;
 }
 

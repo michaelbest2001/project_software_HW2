@@ -11,6 +11,7 @@ import numpy as np
 import math
 import pandas as pd
 import sys
+import kmeanssp as kmeans
 np.random.seed(0)
 
 
@@ -132,6 +133,17 @@ def culc_vectors_arr(file_name1, file_name2):
     vectors_df = pd.merge(df1, df2, on="key", how = "inner")
     global vectors_arr
     vectors_arr = sort_by_key(vectors_df.values.tolist())
+
+def handle_c_output();
+    #Handles the output of the c program
+    culc_vectors_arr(file_name1, file_name2)
+    culc_initial_centroids()
+    result_centroids = kmeans.fit(vectors_arr, initial_centroids, num_of_clusters, iter_num,
+        len(vectors_arr), vector_len, epsilon)
+    if result_centroids != None:
+        print([c[0] for c in result_centroids])
+  
+
     
 if __name__ == "__main__":
     args = sys.argv
@@ -147,6 +159,7 @@ if __name__ == "__main__":
     global initial_centroids
 
     initial_centroids = []
+    result_centroids = []
     
     if len(args) == 5:
         num_of_clusters = int(args[1])
@@ -154,26 +167,17 @@ if __name__ == "__main__":
         file_name1 = args[3]
         file_name2 = args[4]
         iter_num = 300
+        handle_c_output()
+
         
-        fit(vectors_arr, initial_centroids, num_of_clusters, max_iter,
-            len(vectors_arr), vector_len, epsilon)
-        
-        culc_vectors_arr(file_name1, file_name2)
-        culc_initial_centroids()
-        print([c[0] for c in initial_centroids])
     elif len(args) == 6:
         num_of_clusters = int(args[1])
         iter_num = int(args[2])
         epsilon = float(args[3])
         file_name1 = args[4]
         file_name2 = args[5]
-        
-        fit(vectors_arr, initial_centroids, num_of_clusters, max_iter,
-            len(vectors_arr), vector_len, epsilon)
-        
-        culc_vectors_arr(file_name1, file_name2)
-        culc_initial_centroids()
-        print([c[0] for c in initial_centroids])
+        handle_c_output()
+
     else:
         print("An Error Has Occurred")
     

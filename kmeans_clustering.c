@@ -20,9 +20,7 @@ void vectorSum(double* a, double* b);
 void scaleDownVector(double* a, double* b, int n);
 int check_convergence(double* a, double* b, int n);
 void updateCentroids(int* nextClustersSize, double* nextClustersSum);
-void kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_ite_c, int num_vectors_c, int vector_length_c, double epsilon_c);
-
-
+double* kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_iter_c, int num_vectors_c, int vector_length_c, double epsilon_c);
 
 double distance(double* a, double* b)
 {
@@ -149,7 +147,7 @@ void updateCentroids(int* nextClustersSize, double* nextClustersSum)
 
 }
 
-double* kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_ite_c, int num_vectors_c, int vector_length_c, double epsilon_c){
+double* kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_iter_c, int num_vectors_c, int vector_length_c, double epsilon_c){
 	
 	int i;
 	int iteration = 0;
