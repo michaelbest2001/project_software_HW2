@@ -61,7 +61,7 @@ static PyObject* fit(PyObject *self, PyObject *args)
     int vector_length_c;
 
     /* Parse the arguments from Python*/
-    if (!PyArg_ParseTuple(args, "OOii", &vectorsListPy, &centroidsPy, &k_c, &max_iter_c, &num_vectors_c, &vector_length_c, &epsilon_c)){
+    if (!PyArg_ParseTuple(args, "OOiiiid", &vectorsListPy, &centroidsPy, &k_c, &max_iter_c, &num_vectors_c, &vector_length_c, &epsilon_c)){
         return NULL;
     }
     /*fit the python list to c array*/
