@@ -11,7 +11,7 @@ static double* centroids;
 static int k;
 static int max_iter;
 static int converged = 0;
-static int legal = 1;
+
 
 
 double distance(double*, double* b);
@@ -149,7 +149,6 @@ void updateCentroids(int* nextClustersSize, double* nextClustersSum)
 
 double* kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_iter_c, int num_vectors_c, int vector_length_c, double epsilon_c){
 	
-	int i;
 	int iteration = 0;
 	double* nextClustersSum;
 	int* nextClustersSize;
@@ -163,7 +162,7 @@ double* kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_it
 	centroids = centroids_c;
 	vectorsList = vectorsList_c;
 	k = k_c;
-	max_iter = max_ite_c;
+	max_iter = max_iter_c;
 	num_vectors = num_vectors_c;
 	vector_length = vector_length_c;
 	epsilon = epsilon_c;

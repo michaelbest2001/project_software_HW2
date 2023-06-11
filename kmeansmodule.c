@@ -50,10 +50,10 @@ static PyObject* fit_array_to_list_of_lists(double* array, Py_ssize_t rows, Py_s
 
 static PyObject* fit(PyObject *self, PyObject *args)
 {
-    PyObject* vectorsListPy;
-    PyObject* centroidsPy;
-    double* centroids_c;
-    double* vectorsList_c;
+    PyObject* vectorsListPy = NULL;
+    PyObject* centroidsPy = NULL;
+    double* centroids_c = NULL;
+    double* vectorsList_c = NULL;
     int max_iter_c;
     int k_c;
     double epsilon_c;
@@ -88,26 +88,23 @@ static PyMethodDef kmeansMethods[] = {
       (PyCFunction) fit, /* the C-function that implements the Python function and returns static PyObject*  */
       METH_VARARGS,           /* flags indicating parameters
 accepted for this function */
-      PyDoc_STR('''
-Perform the k-means clustering algorithm on a set of vectors.
 
-Args:
-    self (PyObject*): The reference to the current Python object.
-    args (PyObject*): The arguments passed to the function, including:
-
-                        vectorsList - The data points to preform the clustering
-                        centroids - initital centroids to start the clustering
-                        k - The number of clusters to create
-                        max_iter - The maximum number of iterations to perform
-                        num_vectors - The number of vectors in the vectorsList
-                        vector_length - The length of each vector in the vectorsList
-                        epsilon - The minimum distance between two centroids to stop the clustering
-                
-Returns:
-    PyObject*: The Python list containing the resulting centroids after the k-means clustering.
-
-'''
+PyDoc_STR("Perform the k-means clustering algorithm on a set of vectors.\n\n"
+"Args:\n"
+"    self (PyObject*): The reference to the current Python object.\n"
+"    args (PyObject*): The arguments passed to the function, including:\n\n"
+"                      vectorsList - The data points to perform the clustering\n"
+"                      centroids - Initial centroids to start the clustering\n"
+"                      k - The number of clusters to create\n"
+"                      max_iter - The maximum number of iterations to perform\n"
+"                      num_vectors - The number of vectors in the vectorsList\n"
+"                      vector_length - The length of each vector in the vectorsList\n"
+"                      epsilon - The minimum distance between two centroids to stop the clustering\n"
+"\n"
+"Returns:\n"
+"    PyObject*: The Python list containing the resulting centroids after the k-means clustering."
 )}, /*  The docstring for the function */
+
     {NULL, NULL, 0, NULL}     
 };
 

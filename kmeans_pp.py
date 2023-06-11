@@ -134,7 +134,7 @@ def culc_vectors_arr(file_name1, file_name2):
     global vectors_arr
     vectors_arr = sort_by_key(vectors_df.values.tolist())
 
-def handle_c_output();
+def handle_c_output():
     #Handles the output of the c program
     culc_vectors_arr(file_name1, file_name2)
     culc_initial_centroids()
