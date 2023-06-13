@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "cap.h"
-
+printf("kmeans_clustering.c\n");
 static int vector_length = 0;
 static int num_vectors = 0;
 static double epsilon = 0;
@@ -147,8 +147,24 @@ void updateCentroids(int* nextClustersSize, double* nextClustersSum)
 
 }
 
+void printList(double* list, int num_vec){
+	int i;
+	int j;
+
+	for (i = 0; i < num_vec; i++) {
+        for (j = 0; j < vector_length; j++) {
+            printf("%.4f", list[i*vector_length + j]);
+			if(j < vector_length - 1){
+				printf(",");
+			}
+        }
+        printf("\n");
+    }
+	printf("\n");
+}
+
 double* kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_iter_c, int num_vectors_c, int vector_length_c, double epsilon_c){
-	
+	printf("kmeans_c\n");
 	int iteration = 0;
 	double* nextClustersSum;
 	int* nextClustersSize;
@@ -187,6 +203,7 @@ double* kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_it
 			break;
 		}
 	}
+	printList(centroids, k);
 
     /*Free the allocated memory*/
     free(vectorsList);

@@ -138,9 +138,15 @@ def handle_c_output():
     #Handles the output of the c program
     culc_vectors_arr(file_name1, file_name2)
     culc_initial_centroids()
+
+    print("Initial centroids:")
+    print([c[0] for c in initial_centroids])
+    print(kmeans.fit.__doc__)
+    
     result_centroids = kmeans.fit(vectors_arr, initial_centroids, num_of_clusters, iter_num,
         len(vectors_arr), vector_len, epsilon)
     if result_centroids != None:
+        print("Result centroids:")
         print([c[0] for c in result_centroids])
   
 

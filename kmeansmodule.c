@@ -50,35 +50,43 @@ static PyObject* fit_array_to_list_of_lists(double* array, Py_ssize_t rows, Py_s
 
 static PyObject* fit(PyObject *self, PyObject *args)
 {
+    printf("fit\n");
     PyObject* vectorsListPy = NULL;
     PyObject* centroidsPy = NULL;
-    double* centroids_c = NULL;
-    double* vectorsList_c = NULL;
+    double* centroids_c;
+    double* vectorsList_c;
     int max_iter_c;
     int k_c;
     double epsilon_c;
     int num_vectors_c;
     int vector_length_c;
 
+
     /* Parse the arguments from Python*/
     if (!PyArg_ParseTuple(args, "OOiiiid", &vectorsListPy, &centroidsPy, &k_c, &max_iter_c, &num_vectors_c, &vector_length_c, &epsilon_c)){
         return NULL;
     }
+    vectorsList_c = (double*)malloc(num_vectors_c * vector_length_c * sizeof(double));
+    centroids_c = (double*)malloc(k_c * vector_length_c * sizeof(double));
     /*fit the python list to c array*/
     fit_list_of_lists_to_array(vectorsListPy, vectorsList_c, num_vectors_c, vector_length_c);
     fit_list_of_lists_to_array(centroidsPy, centroids_c, k_c, vector_length_c);
 
     if (vectorsList_c == NULL || centroids_c == NULL){
         return NULL;
-    }   
+    }  
    
     double* result_centroids_c  = kmeans_c(vectorsList_c, centroids_c, k_c, max_iter_c, num_vectors_c, vector_length_c, epsilon_c);
+
+    
     if(result_centroids_c == NULL){
         return NULL;
     }
     Py_ssize_t size = k_c;
     /*fit the c array to python list*/
     PyObject* resultCentroidsPy = fit_array_to_list_of_lists(result_centroids_c, size, vector_length_c);
+    free(vectorsList_c);
+    free(centroids_c);
     return resultCentroidsPy;
 }
 
@@ -109,7 +117,7 @@ PyDoc_STR("Perform the k-means clustering algorithm on a set of vectors.\n\n"
 };
 
 /* modules definition */
-static struct PyModuleDef moduledef = {
+static struct PyModuleDef kmeansmodule = {
     PyModuleDef_HEAD_INIT,
     "kmeanssp", 
     NULL, 
@@ -119,8 +127,9 @@ static struct PyModuleDef moduledef = {
 
 PyMODINIT_FUNC PyInit_kmeanssp(void)
 {
+    printf("PyInit_kmeanssp\n");
     PyObject *m;
-    m = PyModule_Create(&moduledef);
+    m = PyModule_Create(&kmeansmodule);
     if (!m) {
         return NULL;
     }
