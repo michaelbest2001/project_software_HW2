@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "cap.h"
-printf("kmeans_clustering.c\n");
+
 static int vector_length = 0;
 static int num_vectors = 0;
 static double epsilon = 0;
