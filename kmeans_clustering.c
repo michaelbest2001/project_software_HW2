@@ -164,13 +164,11 @@ void printList(double* list, int num_vec){
 }
 
 double* kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_iter_c, int num_vectors_c, int vector_length_c, double epsilon_c){
-	printf("kmeans_c\n");
 	int iteration = 0;
 	double* nextClustersSum;
 	int* nextClustersSize;
 	double* currnextClustersSum;
 	int* currnextClustersSize;
-
 	nextClustersSum = (double*)malloc(k * sizeof(double)*vector_length);
 	/*Used to keep track of the sum of the vectors we put in every cluster*/
 	nextClustersSize = (int*)malloc(k * sizeof(int));
@@ -198,18 +196,13 @@ double* kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_it
 		currnextClustersSum = nextClustersSum;
 		updateCentroids(currnextClustersSize, currnextClustersSum);
 		iteration++;
-		/*printf("iteration number: %d\n", iteration);*/
 		if(iteration >= max_iter){
 			break;
 		}
 	}
-	printList(centroids, k);
-
     /*Free the allocated memory*/
-    free(vectorsList);
 	free(nextClustersSize);
 	free(nextClustersSum);
-	
     return centroids;
 }
 

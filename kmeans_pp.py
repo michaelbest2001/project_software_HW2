@@ -139,15 +139,17 @@ def handle_c_output():
     culc_vectors_arr(file_name1, file_name2)
     culc_initial_centroids()
 
-    print("Initial centroids:")
-    print([c[0] for c in initial_centroids])
-    print(kmeans.fit.__doc__)
-    print()
-    result_centroids = kmeans.fit(vectors_arr, initial_centroids, num_of_clusters, iter_num,
-                            len(vectors_arr), vector_len, epsilon)
+    initial_centroids_clean = [c[1:] for c in initial_centroids] 
+    vectors_arr_clean = [vec[1:] for vec in vectors_arr]
+         
+    result_centroids = kmeans.fit(vectors_arr_clean, initial_centroids_clean, num_of_clusters, iter_num,
+                            len(vectors_arr), len(initial_centroids_clean[0]), epsilon)
+    result_centroids.insert(0, [int(c[0]) for c in initial_centroids])
     if result_centroids != None:
-        print("Result centroids:")
-        print([c[0] for c in result_centroids])
+        for vec in result_centroids:
+            print(",".join([str(round(x,4)) for x in vec]))
+        
+        
   
 
     

@@ -50,7 +50,6 @@ static PyObject* fit_array_to_list_of_lists(double* array, Py_ssize_t rows, Py_s
 
 static PyObject* fit(PyObject *self, PyObject *args)
 {
-    printf("fit\n");
     PyObject* vectorsListPy = NULL;
     PyObject* centroidsPy = NULL;
     double* centroids_c;
@@ -64,7 +63,6 @@ static PyObject* fit(PyObject *self, PyObject *args)
 
     /* Parse the arguments from Python*/
     if (!PyArg_ParseTuple(args, "OOiiiid", &vectorsListPy, &centroidsPy, &k_c, &max_iter_c, &num_vectors_c, &vector_length_c, &epsilon_c)){
-        printf("PyArg_ParseTuple failed\n");
         return NULL;
 
     }
@@ -73,7 +71,7 @@ static PyObject* fit(PyObject *self, PyObject *args)
     /*fit the python list to c array*/
     fit_list_of_lists_to_array(vectorsListPy, vectorsList_c, num_vectors_c, vector_length_c);
     fit_list_of_lists_to_array(centroidsPy, centroids_c, k_c, vector_length_c);
-
+    
     if (vectorsList_c == NULL || centroids_c == NULL){
         return NULL;
     }  
@@ -88,7 +86,8 @@ static PyObject* fit(PyObject *self, PyObject *args)
     /*fit the c array to python list*/
     PyObject* resultCentroidsPy = fit_array_to_list_of_lists(result_centroids_c, size, vector_length_c);
     free(vectorsList_c);
-    free(centroids_c);
+    free(result_centroids_c);
+    
     return resultCentroidsPy;
 }
 
@@ -129,7 +128,6 @@ static struct PyModuleDef kmeansmodule = {
 
 PyMODINIT_FUNC PyInit_kmeanssp(void)
 {
-    printf("PyInit_kmeanssp\n");
     PyObject *m;
     m = PyModule_Create(&kmeansmodule);
     if (!m) {
