@@ -147,7 +147,7 @@ def handle_c_output():
     result_centroids.insert(0, [int(c[0]) for c in initial_centroids])
     if result_centroids != None:
         for vec in result_centroids:
-            print(",".join([str(round(x,4)) for x in vec]))
+           print(",".join([str(round(x,4)) for x in vec]))
         
         
   
@@ -176,7 +176,7 @@ if __name__ == "__main__":
         file_name2 = args[4]
         iter_num = 300
         handle_c_output()
-
+      
         
     elif len(args) == 6:
         num_of_clusters = int(args[1])
@@ -185,7 +185,7 @@ if __name__ == "__main__":
         file_name1 = args[4]
         file_name2 = args[5]
         handle_c_output()
-
+     
     else:
         print("An Error Has Occurred")
     
