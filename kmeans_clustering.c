@@ -182,7 +182,6 @@ double* kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_it
 	epsilon = epsilon_c;
 	
 	if(nextClustersSize == NULL || nextClustersSum == NULL){
-		printf("An Error Has Occurred\n");
 		free(vectorsList);
 		free(centroids);
 		free(nextClustersSize);
