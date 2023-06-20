@@ -136,12 +136,7 @@ def culc_vectors_arr(file_name1, file_name2):
 
 def handle_c_output():
     #Handles the output of the c program
-    culc_vectors_arr(file_name1, file_name2)
-    if not (1 < num_of_clusters < len(vectors_arr)):
-        print("Invalid number of clusters!")
-        return
     culc_initial_centroids()
-
     initial_centroids_clean = [c[1:] for c in initial_centroids] 
     vectors_arr_clean = [vec[1:] for vec in vectors_arr]
          
@@ -152,14 +147,24 @@ def handle_c_output():
         print(",".join([str(int(c[0])) for c in initial_centroids]))
         for vec in result_centroids:
            print(",".join([f'{x:.4f}' for x in vec]))
-    else:
-        print("An Error Has Occurred\n")
-        
-        
-        
-        
-  
+        #print("")
 
+    else:
+        print("An Error Has Occurred")
+        
+        
+        
+def check_legal_iter(iter):
+    if not iter.isdigit() or not (1 < int(iter) < 1000):
+        print("Invalid maximum iteration!")
+        return False
+    return True
+
+def check_legal_k(k):
+    if not args[1].isdigit() or not (1 < int(k) < len(vectors_arr)):
+        print("Invalid number of clusters!")
+        return False
+    return True
     
 if __name__ == "__main__":
     args = sys.argv
@@ -172,54 +177,44 @@ if __name__ == "__main__":
     global epsilon #We will run the kMeans algorithm until the distance between
     #the newly created list of centroids and the previous one is less than epsilon
     global iter_num #Maximal number of iterations of the kmeans algorithm that we do
-    global initial_centroids
+    global initial_centroids #The list of centroids we start with
     valid = True
     initial_centroids = []
     result_centroids = []
     
     if len(args) == 5:
-        if not args[1].isdigit():
-            print("Invalid number of clusters!")
-            exit()
-        num_of_clusters = int(args[1])
-        epsilon = float(args[2])
         file_name1 = args[3]
         file_name2 = args[4]
         iter_num = 300
-        try:
-            handle_c_output()
-        except:
-            print("An Error Has Occurred")
-        finally:
-            print("")
-      
+        culc_vectors_arr(file_name1, file_name2)
+        if not check_legal_k(args[1]):
+            exit()
+        
+        num_of_clusters = int(args[1])
+        epsilon = float(args[2])
+    
+        handle_c_output()
         
     elif len(args) == 6:
+        file_name1 = args[4]
+        file_name2 = args[5]
+        culc_vectors_arr(file_name1, file_name2)
         
-        if not args[2].isdigit() or not (1 < int(args[2]) < 1000):
-            print("Invalid maximum iterations!")
+        if not check_legal_k(args[1]):
             valid = False
-        if not args[1].isdigit():
-            print("Invalid number of clusters!")
-            exit()
-        if not valid:
-            iter_num = 0
-        else:
-            iter_num = int(args[2])
+        if not check_legal_iter(args[2]):
+            valid = False
         
+        if not valid:  
+            exit()
+        
+        iter_num = int(args[2])
         num_of_clusters = int(args[1])
         epsilon = float(args[3])
         file_name1 = args[4]
         file_name2 = args[5]
-
-        try:
-            handle_c_output()
-        except:
-            print("An Error Has Occurred")
-        finally:
-            print("")
-     
+        handle_c_output()
     else:
-        print("An Error Has Occurre\n")
+        print("An Error Has Occurred")
     
     
