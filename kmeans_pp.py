@@ -147,7 +147,7 @@ def handle_c_output():
         print(",".join([str(int(c[0])) for c in initial_centroids]))
         for vec in result_centroids:
            print(",".join([f'{x:.4f}' for x in vec]))
-        #print("")
+        print("")
 
     else:
         print("An Error Has Occurred")
