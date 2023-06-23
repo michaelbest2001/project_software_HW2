@@ -76,15 +76,16 @@ static PyObject* fit(PyObject *self, PyObject *args)
         return NULL;
     }  
    
-    double* result_centroids_c  = kmeans_c(vectorsList_c, centroids_c, k_c, max_iter_c, num_vectors_c, vector_length_c, epsilon_c);
+    /*double* result_centroids_c  = */
+    kmeans_c(vectorsList_c, centroids_c, k_c, max_iter_c, num_vectors_c, vector_length_c, epsilon_c);
 
-    if(result_centroids_c == NULL){
+    if(centroids_c == NULL){
         return NULL;
     }
     /*fit the c array to python list*/
-    PyObject* resultCentroidsPy = fit_array_to_list_of_lists(result_centroids_c, k_c, vector_length_c);
+    PyObject* resultCentroidsPy = fit_array_to_list_of_lists(centroids_c, k_c, vector_length_c);
     free(vectorsList_c);
-    free(result_centroids_c);
+    free(centroids_c);
     
     return resultCentroidsPy;
 }

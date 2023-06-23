@@ -20,7 +20,7 @@ void vectorSum(double* a, double* b);
 void scaleDownVector(double* a, double* b, int n);
 int check_convergence(double* a, double* b, int n);
 void updateCentroids(int* nextClustersSize, double* nextClustersSum);
-double* kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_iter_c, int num_vectors_c, int vector_length_c, double epsilon_c);
+void kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_iter_c, int num_vectors_c, int vector_length_c, double epsilon_c);
 
 double distance(double* a, double* b)
 {
@@ -163,12 +163,12 @@ void printList(double* list, int num_vec){
 	printf("\n");
 }
 
-double* kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_iter_c, int num_vectors_c, int vector_length_c, double epsilon_c){
+void kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_iter_c, int num_vectors_c, int vector_length_c, double epsilon_c){
 	int iteration = 0;
 	double* nextClustersSum;
 	int* nextClustersSize;
-	double* currnextClustersSum;
-	int* currnextClustersSize;
+	/*double* currnextClustersSum;
+	int* currnextClustersSize;*/
 	nextClustersSum = (double*)malloc(k * sizeof(double)*vector_length);
 	/*Used to keep track of the sum of the vectors we put in every cluster*/
 	nextClustersSize = (int*)malloc(k * sizeof(int));
@@ -187,13 +187,14 @@ double* kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_it
 		free(nextClustersSize);
 		free(nextClustersSum);
 	
-		return NULL;
+		centroids = NULL;
+		return;
 	}
 
 	while(!converged){
-		currnextClustersSize = nextClustersSize;
-		currnextClustersSum = nextClustersSum;
-		updateCentroids(currnextClustersSize, currnextClustersSum);
+		/*currnextClustersSize = nextClustersSize;
+		currnextClustersSum = nextClustersSum;*/
+		updateCentroids(nextClustersSize, nextClustersSum);
 		iteration++;
 		if(iteration >= max_iter){
 			break;
@@ -202,7 +203,8 @@ double* kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_it
     /*Free the allocated memory*/
 	free(nextClustersSize);
 	free(nextClustersSum);
-    return centroids;
+    /*return centroids;*/
+	return;
 }
 
 
