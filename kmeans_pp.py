@@ -187,14 +187,14 @@ if __name__ == "__main__":
         iter_num = 300
         culc_vectors_arr(file_name1, file_name2)
         if not check_legal_k(args[1]):
-            #print("")
+            print("")
             exit()
         
         num_of_clusters = int(args[1])
         epsilon = float(args[2])
     
         handle_c_output()
-        #print("")
+        print("")
         
     elif len(args) == 6:
         file_name1 = args[4]
@@ -207,7 +207,7 @@ if __name__ == "__main__":
             valid = False
         
         if not valid:  
-            #print("")
+            print("")
             exit()
         
         iter_num = int(args[2])
@@ -216,7 +216,7 @@ if __name__ == "__main__":
         file_name1 = args[4]
         file_name2 = args[5]
         handle_c_output()
-        #print("")
+        print("")
     else:
         print("An Error Has Occurred")
     

@@ -147,32 +147,17 @@ void updateCentroids(int* nextClustersSize, double* nextClustersSum)
 
 }
 
-void printList(double* list, int num_vec){
-	int i;
-	int j;
-
-	for (i = 0; i < num_vec; i++) {
-        for (j = 0; j < vector_length; j++) {
-            printf("%.4f", list[i*vector_length + j]);
-			if(j < vector_length - 1){
-				printf(",");
-			}
-        }
-        printf("\n");
-    }
-	printf("\n");
-}
-
 void kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_iter_c, int num_vectors_c, int vector_length_c, double epsilon_c){
 	int iteration = 0;
 	double* nextClustersSum;
 	int* nextClustersSize;
-	/*double* currnextClustersSum;
-	int* currnextClustersSize;*/
+
 	nextClustersSum = (double*)malloc(k * sizeof(double)*vector_length);
 	/*Used to keep track of the sum of the vectors we put in every cluster*/
 	nextClustersSize = (int*)malloc(k * sizeof(int));
 	/*Used to keep track of how many vactors we put in every cluster*/
+
+	
 	centroids = centroids_c;
 	vectorsList = vectorsList_c;
 	k = k_c;
@@ -180,20 +165,18 @@ void kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_iter_
 	num_vectors = num_vectors_c;
 	vector_length = vector_length_c;
 	epsilon = epsilon_c;
-	
+
 	if(nextClustersSize == NULL || nextClustersSum == NULL){
 		free(vectorsList);
 		free(centroids);
 		free(nextClustersSize);
 		free(nextClustersSum);
 	
-		centroids = NULL;
-		return;
+		centroids = NULL; 
 	}
 
 	while(!converged){
-		/*currnextClustersSize = nextClustersSize;
-		currnextClustersSum = nextClustersSum;*/
+		
 		updateCentroids(nextClustersSize, nextClustersSum);
 		iteration++;
 		if(iteration >= max_iter){
@@ -203,8 +186,8 @@ void kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_iter_
     /*Free the allocated memory*/
 	free(nextClustersSize);
 	free(nextClustersSum);
-    /*return centroids;*/
-	return;
+    
+	
 }
 
 

@@ -2,6 +2,22 @@
 #include <Python.h>
 #include "cap.h"
 
+void printList(double* list, int num_vec, int vector_length){
+	int i;
+	int j;
+
+	for (i = 0; i < num_vec; i++) {
+        for (j = 0; j < vector_length; j++) {
+            printf("%.4f", list[i*vector_length + j]);
+			if(j < vector_length - 1){
+				printf(",");
+			}
+        }
+        printf("\n");
+    }
+	printf("\n");
+}
+
 
 /* Function to fit a list of lists from Python into a continuous array in C */
 void fit_list_of_lists_to_array(PyObject* input_list, double* array, Py_ssize_t list_size, Py_ssize_t sublist_size) {
@@ -60,7 +76,7 @@ static PyObject* fit(PyObject *self, PyObject *args)
     int num_vectors_c;
     int vector_length_c;
 
-
+    
     /* Parse the arguments from Python*/
     if (!PyArg_ParseTuple(args, "OOiiiid", &vectorsListPy, &centroidsPy, &k_c, &max_iter_c, &num_vectors_c, &vector_length_c, &epsilon_c)){
         return NULL;
@@ -76,9 +92,8 @@ static PyObject* fit(PyObject *self, PyObject *args)
         return NULL;
     }  
    
-    /*double* result_centroids_c  = */
     kmeans_c(vectorsList_c, centroids_c, k_c, max_iter_c, num_vectors_c, vector_length_c, epsilon_c);
-
+   
     if(centroids_c == NULL){
         return NULL;
     }
@@ -86,6 +101,7 @@ static PyObject* fit(PyObject *self, PyObject *args)
     PyObject* resultCentroidsPy = fit_array_to_list_of_lists(centroids_c, k_c, vector_length_c);
     free(vectorsList_c);
     free(centroids_c);
+    
     
     return resultCentroidsPy;
 }
