@@ -15,9 +15,6 @@ import kmeanssp as kmeans
 np.random.seed(0)
 
 
-
-
-
 def distance(vec1, vec2):
     #Returns the square of the distance between the two vectors
     output = 0
@@ -83,6 +80,7 @@ def read_vectors(input_data):
     file1.close()
     global vector_len
     vector_len = len(data_points[0])
+    
     return data_points
 
 '''def array_to_data_frame(arr):
@@ -137,11 +135,11 @@ def culc_vectors_arr(file_name1, file_name2):
 def handle_c_output():
     #Handles the output of the c program
     culc_initial_centroids()
-    initial_centroids_clean = [c[1:] for c in initial_centroids] 
+    initial_centroids_clean = [c[1:] for c in initial_centroids] #We don't need the keys
     vectors_arr_clean = [vec[1:] for vec in vectors_arr]
          
     result_centroids = kmeans.fit(vectors_arr_clean, initial_centroids_clean, num_of_clusters, iter_num,
-                            len(vectors_arr), len(initial_centroids_clean[0]), epsilon)
+                            len(vectors_arr), len(vectors_arr_clean[0]), epsilon)
     
     if result_centroids != None:
         print(",".join([str(int(c[0])) for c in initial_centroids]))
@@ -195,6 +193,7 @@ if __name__ == "__main__":
     
         handle_c_output()
         print("")
+       
         
     elif len(args) == 6:
         file_name1 = args[4]
@@ -218,6 +217,6 @@ if __name__ == "__main__":
         handle_c_output()
         print("")
     else:
-        print("An Error Has Occurred")
+        print("An Error Has Occurred\n")
     
     

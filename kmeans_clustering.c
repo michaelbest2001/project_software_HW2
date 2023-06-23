@@ -11,7 +11,8 @@ static double* centroids;
 static int k;
 static int max_iter;
 static int converged = 0;
-
+static double* nextClustersSum;
+static int* nextClustersSize;
 
 
 double distance(double*, double* b);
@@ -19,7 +20,7 @@ int findMinDistance(double* vector);
 void vectorSum(double* a, double* b);
 void scaleDownVector(double* a, double* b, int n);
 int check_convergence(double* a, double* b, int n);
-void updateCentroids(int* nextClustersSize, double* nextClustersSum);
+void updateCentroids(void);
 void kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_iter_c, int num_vectors_c, int vector_length_c, double epsilon_c);
 
 double distance(double* a, double* b)
@@ -100,14 +101,14 @@ int check_convergence(double* a, double* b, int n){
 }
 
 
-void updateCentroids(int* nextClustersSize, double* nextClustersSum)
+void updateCentroids(void)
 {
 	int i;
 	int j;
 	int centroid_converged;
+	int curr_iteration_convergence;
 	int currentVectorClusterIndex;
 	double* currentVectorCluster;
-	int curr_iteration_convergence;
 	double* currentVector;
 
 	for (j = 0; j < k * vector_length; j++) {
@@ -116,15 +117,16 @@ void updateCentroids(int* nextClustersSize, double* nextClustersSum)
 	for (j = 0; j < k; j++){
 		 *(nextClustersSize + j) = 0;
 	}
-		
+	
 	currentVector = vectorsList;
+	
 	/*This holds the pointer to the vector we work in the current iteration*/
-
+	
 	for (i = 0; i < num_vectors; i++)
 	{
 		currentVectorClusterIndex = findMinDistance(currentVector);
-
-		currentVectorCluster = nextClustersSum + vector_length *currentVectorClusterIndex;
+		currentVectorCluster = nextClustersSum + vector_length * currentVectorClusterIndex;
+		
 		/*The pointer to where we store the sum of vectors of the cluster we just added this element to*/
 		/*We wish to add currentVector to this vector*/
 		vectorSum(currentVectorCluster, currentVector);
@@ -133,9 +135,11 @@ void updateCentroids(int* nextClustersSize, double* nextClustersSum)
 		/*We add 1 to the count of the size of the cluster*/
 
 		currentVector += vector_length;
+		
 	}
-
+	
 	/*Now we update the list of centroids*/
+	
 	curr_iteration_convergence = 1;
 	for (i = 0; i < k; i++)
 	{
@@ -144,19 +148,12 @@ void updateCentroids(int* nextClustersSize, double* nextClustersSum)
 		curr_iteration_convergence *= centroid_converged;
 	}
 	converged = curr_iteration_convergence;	
-
+	
 }
 
 void kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_iter_c, int num_vectors_c, int vector_length_c, double epsilon_c){
 	int iteration = 0;
-	double* nextClustersSum;
-	int* nextClustersSize;
-
-	nextClustersSum = (double*)malloc(k * sizeof(double)*vector_length);
-	/*Used to keep track of the sum of the vectors we put in every cluster*/
-	nextClustersSize = (int*)malloc(k * sizeof(int));
-	/*Used to keep track of how many vactors we put in every cluster*/
-
+	/*Used to keep track of the number of iterations we have done*/
 	
 	centroids = centroids_c;
 	vectorsList = vectorsList_c;
@@ -166,6 +163,10 @@ void kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_iter_
 	vector_length = vector_length_c;
 	epsilon = epsilon_c;
 
+	nextClustersSum = (double*)malloc(k * sizeof(double)*vector_length);
+	/*Used to keep track of the sum of the vectors we put in every cluster*/
+	nextClustersSize = (int*)malloc(k * sizeof(int));
+	/*Used to keep track of how many vactors we put in every cluster*/
 	if(nextClustersSize == NULL || nextClustersSum == NULL){
 		free(vectorsList);
 		free(centroids);
@@ -176,8 +177,7 @@ void kmeans_c(double* vectorsList_c, double* centroids_c, int k_c, int max_iter_
 	}
 
 	while(!converged){
-		
-		updateCentroids(nextClustersSize, nextClustersSum);
+		updateCentroids();
 		iteration++;
 		if(iteration >= max_iter){
 			break;
